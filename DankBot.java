@@ -38,7 +38,6 @@ public class DankBot {
                     tweetResult = tempTweetResult;
                     break;
                 }
-                
             }
 
             String tweetText = tweetResult.getText();
@@ -52,22 +51,21 @@ public class DankBot {
                     // statusUpdate.inReplyToStatusId(tweetResult.getId());
                     try {
                         Status status = twitter.updateStatus(statusUpdate);
+                        System.out.println(tweetText);
+                        System.out.println("Done.");
                     } catch (TwitterException e) {
                         System.out.println("Could not tweet, for some reason, it is above 140 characters...");
                         unableToTweet = true;
-                    }
-                    System.out.println(tweetText);
+                    }                    
                 }
                 else {
                     unableToTweet = true;
                 }
             }
             else {
-                System.out.println("For some reason, this tweet did not query correctly. Dank was not found.");
+                System.out.println("For some reason, this tweet did not query correctly. Dark was not found.");
                 unableToTweet = true;
             }
-
-            System.out.println("Done.");
 
             if (!unableToTweet) {
                 try {
