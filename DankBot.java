@@ -9,28 +9,23 @@ import twitter4j.TwitterFactory;
 
 public class DankBot {
 
-    //if something goes wrong, we might see a TwitterException
     public static void main(String... args) throws TwitterException {
         while (true) {
             boolean unableToTweet = false;
-            //access the twitter API using your twitter4j.properties file
-            /// Twitter twitter = TwitterFactory.getSingleton();
-            //send a tweet
-            // Status status = twitter.updateStatus("Hello, World!");
-            //print a message so we know when it finishes
-            // System.out.println("Done.");
+
             Twitter twitter = TwitterFactory.getSingleton();
 
             //create a new search
             Query query = new Query("\"dark\"");
             query.lang("en");
             query = query.count(50);
-            // System.out.println(query.getCount() + query.getQuery()); // Diagnostic
+            
             //get the results from that search
             QueryResult result = twitter.search(query);
 
             //get the first tweet from those results
             Status tweetResult = result.getTweets().get(0);
+            
             for (int i = 0; i < 50; i++) {
                 Status tempTweetResult = result.getTweets().get(i);
 
@@ -45,10 +40,8 @@ public class DankBot {
             if (tweetText.toLowerCase().contains("dark")) {
                 tweetText = tweetText.substring(0, tweetText.toLowerCase().indexOf("dark")) + "dank" + tweetText.substring(tweetText.toLowerCase().indexOf("dark") + 4);
 
-                //reply to that tweet
                 if (tweetText.length() < 140) {
                     StatusUpdate statusUpdate = new StatusUpdate(/*"@" + tweetResult.getUser().getScreenName() + " " + */tweetText);
-                    // statusUpdate.inReplyToStatusId(tweetResult.getId());
                     try {
                         Status status = twitter.updateStatus(statusUpdate);
                         System.out.println(tweetText);
@@ -77,3 +70,12 @@ public class DankBot {
         }
     }
 }
+/*
+ * public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+        public void run() {
+            System.out.println("Program Closed");
+        }
+        
+    }, "Shutdown-thread"));
+ */
