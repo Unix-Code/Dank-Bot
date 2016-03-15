@@ -39,7 +39,7 @@ public class DankBot {
             
             //get the first tweet from those results
 
-            for (Status tweet : allTweets) {
+            while (tweetIndex < allTweets.size()) {
                 if (tweet.getText().toLowerCase().contains("dark") && tweet.getURLEntities().length == 0 && tweet.getMediaEntities().length == 0) {
                     break;
                 }
