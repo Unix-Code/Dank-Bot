@@ -6,36 +6,50 @@ import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import java.util.ArrayList;
 
 public class DankBot {
 
     public static void main(String... args) throws TwitterException {
+        int tweetIndex = 0;
         while (true) {
             boolean unableToTweet = false;
+
+            ArrayList<Status> allTweets = new ArrayList<>();
 
             Twitter twitter = TwitterFactory.getSingleton();
 
             //create a new search
-            Query query = new Query("\"dark\"");
-            query.lang("en");
-            query = query.count(50);
-            
+            Query query = new Query("dark");
+            query.setLang("en");
+            query.setCount(50);
+
             //get the results from that search
-            QueryResult result = twitter.search(query);
-
-            //get the first tweet from those results
-            Status tweetResult = result.getTweets().get(0);
+            if (tweetIndex > 50 /*# of tweets per 1 query*/) {
+                allTweets.clear();
+            }
             
-            for (int i = 0; i < 50; i++) {
-                Status tempTweetResult = result.getTweets().get(i);
+            if (allTweets.size() == 0) {
+                QueryResult result = twitter.search(query);
 
-                if (tempTweetResult.getText().toLowerCase().contains("dark") && tempTweetResult.getURLEntities().length == 0 && tempTweetResult.getMediaEntities().length == 0) {
-                    tweetResult = tempTweetResult;
-                    break;
+                for(Status tweet : result.getTweets()) {
+                    allTweets.add(tweet);
                 }
             }
+            
+            //get the first tweet from those results
 
-            String tweetText = tweetResult.getText();
+            for (Status tweet : allTweets) {
+                if (tweet.getText().toLowerCase().contains("dark") && tweet.getURLEntities().length == 0 && tweet.getMediaEntities().length == 0) {
+                    break;
+                }
+                tweetIndex ++;
+            }
+            System.out.println("TweetIndex: " + tweetIndex + " of allTweets Size: " + allTweets.size()); // Diagnostic
+            
+            if (tweetIndex >= allTweets.size()) continue;
+            
+            String tweetText = allTweets.get(tweetIndex).getText();
 
             if (tweetText.toLowerCase().contains("dark")) {
                 tweetText = tweetText.substring(0, tweetText.toLowerCase().indexOf("dark")) + "dank" + tweetText.substring(tweetText.toLowerCase().indexOf("dark") + 4);
@@ -48,6 +62,7 @@ public class DankBot {
                         System.out.println("Done.");
                     } catch (TwitterException e) {
                         System.out.println("Could not tweet, for some reason, it is above 140 characters...");
+                        e.printStackTrace();
                         unableToTweet = true;
                     }                    
                 }
@@ -72,10 +87,10 @@ public class DankBot {
 }
 /*
  * public static void main(String[] args) {
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-        public void run() {
-            System.out.println("Program Closed");
-        }
-        
-    }, "Shutdown-thread"));
+Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+public void run() {
+System.out.println("Program Closed");
+}
+
+}, "Shutdown-thread"));
  */
