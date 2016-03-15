@@ -9,14 +9,13 @@ import twitter4j.TwitterFactory;
 import java.util.ArrayList;
 
 public class DankBot {
-
     public static void main(String... args) throws TwitterException {
         int tweetIndex = 0;
+        ArrayList<Status> allTweets = new ArrayList<>();
+        
         while (true) {
             boolean unableToTweet = false;
-
-            ArrayList<Status> allTweets = new ArrayList<>();
-
+            
             Twitter twitter = TwitterFactory.getSingleton();
 
             //create a new search
@@ -25,8 +24,9 @@ public class DankBot {
             query.setCount(50);
 
             //get the results from that search
-            if (tweetIndex > 50 /*# of tweets per 1 query*/) {
+            if (tweetIndex >= 50 /*# of tweets per 1 query*/) {
                 allTweets.clear();
+                tweetIndex = 0;
             }
             
             if (allTweets.size() == 0) {
@@ -34,13 +34,12 @@ public class DankBot {
 
                 for(Status tweet : result.getTweets()) {
                     allTweets.add(tweet);
+                    System.out.println(tweet.getText() + "\n");
                 }
             }
-            
-            //get the first tweet from those results
 
             while (tweetIndex < allTweets.size()) {
-                if (tweet.getText().toLowerCase().contains("dark") && tweet.getURLEntities().length == 0 && tweet.getMediaEntities().length == 0) {
+                if (allTweets.get(tweetIndex).getText().toLowerCase().contains("dark") && allTweets.get(tweetIndex).getURLEntities().length == 0 && allTweets.get(tweetIndex).getMediaEntities().length == 0) {
                     break;
                 }
                 tweetIndex ++;
@@ -60,9 +59,10 @@ public class DankBot {
                         Status status = twitter.updateStatus(statusUpdate);
                         System.out.println(tweetText);
                         System.out.println("Done.");
+                        tweetIndex++;
                     } catch (TwitterException e) {
-                        System.out.println("Could not tweet, for some reason, it is above 140 characters...");
-                        e.printStackTrace();
+                        // System.out.println("Could not tweet, for some reason, it is above 140 characters...");
+                        // e.printStackTrace();
                         unableToTweet = true;
                     }                    
                 }
@@ -71,16 +71,19 @@ public class DankBot {
                 }
             }
             else {
-                System.out.println("For some reason, this tweet did not query correctly. Dark was not found.");
+                // System.out.println("For some reason, this tweet did not query correctly. Dark was not found.");
                 unableToTweet = true;
             }
 
             if (!unableToTweet) {
                 try {
-                    Thread.sleep(1000 * 60 * 10);
+                    Thread.sleep(1000 * 60 * 30);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
+            }
+            else {
+                tweetIndex++;
             }
         }
     }
