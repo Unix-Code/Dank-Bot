@@ -1,1 +1,1 @@
-web:    java -cp target/classes:target/dependency/* DankBot
+worker: DankBot-1.0-SNAPSHOT.jar
