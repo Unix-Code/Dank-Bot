@@ -1,3 +1,9 @@
+package com.dankbot;
+
+/**
+ *
+ * @author David
+ */
 
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -24,12 +30,12 @@ public class DankBot {
             query.setCount(50);
 
             //get the results from that search
-            if (tweetIndex >= 50 /*# of tweets per 1 query*/) {
+            if (tweetIndex >= 50 /* # of tweets per 1 query*/) {
                 allTweets.clear();
                 tweetIndex = 0;
             }
             
-            if (allTweets.size() == 0) {
+            if (allTweets.isEmpty()) {
                 QueryResult result = twitter.search(query);
 
                 for(Status tweet : result.getTweets()) {
@@ -88,12 +94,3 @@ public class DankBot {
         }
     }
 }
-/*
- * public static void main(String[] args) {
-Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-public void run() {
-System.out.println("Program Closed");
-}
-
-}, "Shutdown-thread"));
- */
