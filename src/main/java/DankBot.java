@@ -23,6 +23,7 @@ public class DankBot {
     public static void main(String... args) throws TwitterException {
         DankBot dankBot = new DankBot();
         dankBot.sendTweet();
+        if (dankBot.isTweetCountMilestone()) dankBot.sendMilestoneTweet();
     }
 
     public void sendTweet() {
@@ -42,7 +43,7 @@ public class DankBot {
                 tweetSent = true;
 
             } catch (TwitterException e) {
-                System.out.println("Could not tweet, for some reason");
+                System.out.println("Could not tweet, for some reason.");
             }
             this.tweetIndex++;
         }
@@ -83,4 +84,42 @@ public class DankBot {
 
         return tweetText;
     }
+    
+    public boolean isTweetCountMilestone() {
+        return getStatusCount()%1000 == 0;
+    }
+    
+    private int getStatusCount() {
+        int statusCount = -1;
+        try {
+            statusCount = twitter.verifyCredentials().getStatusesCount();
+        } catch (TwitterException e) {
+            System.out.println("Could not get Tweet Count.");
+        }
+        return statusCount;
+    }
+    
+    public void sendMilestoneTweet() {
+        try {
+            Status tweet = twitter.updateStatus("Beep Boop Bop! I reached my " + getStatusCount() + " tweet. Beep! Thank you for sticking around for this milestone.");
+            
+        } catch(TwitterException e) {
+            System.out.println("Could not send milestone tweet for some reason.");
+        }
+    }
+    
+//    private String getOrdinalSuffixOf(int i) {
+//        int j = i % 10,
+//            k = i % 100;
+//        if (j == 1 && k != 11) {
+//            return i + "st";
+//        }
+//        if (j == 2 && k != 12) {
+//            return i + "nd";
+//        }
+//        if (j == 3 && k != 13) {
+//            return i + "rd";
+//        }
+//        return i + "th";
+//    }
 }
