@@ -101,7 +101,7 @@ public class DankBot {
     
     public void sendMilestoneTweet() {
         try {
-            Status tweet = twitter.updateStatus("Beep Boop Bop! I reached my " + getStatusCount() + " tweet. Beep! Thank you for sticking around for this milestone.");
+            Status tweet = twitter.updateStatus("Beep Boop Bop! I reached my " + getStatusCount() + "th tweet. Beep! Thank you for sticking around for this milestone.");
             
         } catch(TwitterException e) {
             System.out.println("Could not send milestone tweet for some reason.");
